@@ -6,7 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -48,12 +47,36 @@ class RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext context) {
 //    final wordPair = WordPair.random();
 //    return Text(wordPair.asPascalCase);
-    return Scaffold( // Add from here...
+    return Scaffold(
+      // Add from here...
       appBar: AppBar(
-        title: Text('Startup Name Generator'),
-      ),
+          title: Text('Startup Name Generator'),
+          actions: [IconButton(icon: Icon(Icons.list), onPressed: _pushSaved)]),
       body: _buildSuggestions(),
     );
+  }
+
+  void _pushSaved() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      final tiles = _saved.map((pair) => ListTile(
+            title: Text(
+              pair.asPascalCase,
+              style: _biggerFont,
+            ),
+          ));
+      final divided = ListTile.divideTiles(
+        context: context,
+        tiles: tiles,
+      ).toList();
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Saved suggestions"),
+        ),
+        body: ListView(children: divided),
+      );
+    }));
   }
 
   Widget _buildSuggestions() {
@@ -171,10 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline4,
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
